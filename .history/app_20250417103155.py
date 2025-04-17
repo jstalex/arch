@@ -29,7 +29,7 @@ def index():
         FROM orders o
         JOIN haircuts h ON o.haircut_id = h.haircut_id
         JOIN clients c ON o.client_id = c.client_id
-        JOIN barbers b ON o.barber_id = b.barber_id
+        JOIN barber b ON o.barber_id = b.barber_id
         ORDER BY o.order_date DESC
     """)
     orders = cur.fetchall()
@@ -41,7 +41,7 @@ def index():
     cur.execute("SELECT client_id, first_name, last_name FROM clients")
     clients = cur.fetchall()
     
-    cur.execute("SELECT barber_id, first_name, last_name FROM barbers")
+    cur.execute("SELECT barber_id, first_name, last_name FROM barber")
     barbers = cur.fetchall()
     
     cur.close()
@@ -54,29 +54,18 @@ def add_order():
     haircut_id = request.form['haircut_id']
     client_id = request.form['client_id']
     barber_id = request.form['barber_id']
-    custom_name = request.form.get('custom_name', '').strip()[:50]  # Ограничение 50 символов
-    
-    # Валидация
-    if not all([haircut_id, client_id, barber_id]):
-        flash('Пожалуйста, заполните все обязательные поля', 'error')
-        return redirect(url_for('index'))
     
     conn = get_db_connection()
     cur = conn.cursor()
     
-    try:
-        cur.execute(
-            "INSERT INTO orders (haircut_id, client_id, barber_id, custom_name) VALUES (%s, %s, %s, %s)",
-            (haircut_id, client_id, barber_id, custom_name if custom_name else None)
-        )
-        conn.commit()
-        flash('Заказ успешно добавлен', 'success')
-    except Exception as e:
-        conn.rollback()
-        flash(f'Ошибка при добавлении заказа: {str(e)}', 'error')
-    finally:
-        cur.close()
-        conn.close()
+    cur.execute(
+        "INSERT INTO orders (haircut_id, client_id, barber_id) VALUES (%s, %s, %s)",
+        (haircut_id, client_id, barber_id)
+    )
+    
+    conn.commit()
+    cur.close()
+    conn.close()
     
     return redirect(url_for('index'))
 

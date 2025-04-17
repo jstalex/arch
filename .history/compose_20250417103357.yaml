@@ -2,12 +2,13 @@ version: "3"
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: fapp:local
+    ports:
+      - '5000:5000'
+    environment:
+      - FLASK_ENV=development
     depends_on:
       - db
-    tty: true  # позволяет интерактивный режим
   db:
     image: postgres:16
     container_name: db
@@ -23,4 +24,4 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  postgres_data: {}
