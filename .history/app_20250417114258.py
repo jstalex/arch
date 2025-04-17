@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for
 import psycopg2
 from psycopg2 import sql
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
 
 # Database connection configuration
 DB_CONFIG = {

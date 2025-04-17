@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Парикмахерская - Управление заказами</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .form-group { margin-bottom: 10px; }
+        button { 
+            background-color: #f44336; 
+            color: white; 
+            border: none; 
+            padding: 5px 10px; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #d32f2f; }
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+        input[type="text"] {
+            padding: 6px;
+            width: 300px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Управление заказами</h1>
+    
+    <!-- Блок для отображения сообщений -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <h2>Добавить новый заказ</h2>
+    <form action="/add" method="post">
+        <div class="form-group">
+            <label for="haircut_id">Стрижка:</label>
+            <select name="haircut_id" id="haircut_id" required>
+                {% for haircut in haircuts %}
+                <option value="{{ haircut[0] }}">{{ haircut[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="client_id">Клиент:</label>
+            <select name="client_id" id="client_id" required>
+                {% for client in clients %}
+                <option value="{{ client[0] }}">{{ client[1] }} {{ client[2] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="barber_id">Мастер:</label>
+            <select name="barber_id" id="barber_id" required>
+                {% for barber in barbers %}
+                <option value="{{ barber[0] }}">{{ barber[1] }} {{ barber[2] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="custom_name">Имя клиента (необязательно, макс. 50 символов):</label>
+            <input type="text" name="custom_name" id="custom_name" maxlength="50">
+        </div>
+        
+        <button type="submit">Добавить заказ</button>
+    </form>
+    
+    <h2>Список заказов</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Стрижка</th>
+            <th>Клиент</th>
+            <th>Мастер</th>
+            <th>Дата</th>
+            <th>Действия</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order[0] }}</td>
+            <td>{{ order[1] }}</td>
+            <td>{{ order[2] }}</td>
+            <td>{{ order[3] }}</td>
+            <td>{{ order[4] }}</td>
+            <td>
+                <button onclick="window.location.href='/delete/{{ order[0] }}'">Удалить</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        document.getElementById('custom_name').addEventListener('input', function() {
+            if (this.value.length > 50) {
+                this.value = this.value.substring(0, 50);
+                alert('Максимальная длина имени - 50 символов');
+            }
+        });
+    </script>
+</body>
+</html>
