@@ -34,3 +34,6 @@ CREATE TABLE orders (
 
 напиши простое веб приложение с использованием python. Должен быть графический интерфейс, который позволяет выводить данные из таблицы orders, добавлять их и удалять. Приложение должно запускаться в докер контейнере. БД postgres 16 будет запущена рядом в docker-compose
 
+"stash.tcsbank.ru/stp/execution/internal/convert"
+ "gitlab.tcsbank.ru/invest-execution/contracts/go/convert"
+
