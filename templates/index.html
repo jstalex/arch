@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barbershop</title>
+    <title>Парикмахерская - Управление заказами</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -198,28 +198,17 @@
             padding: 40px;
             color: var(--text-light);
         }
-
-        th:nth-child(5) {
-            cursor: pointer;
-            position: relative;
-            padding-right: 25px;
+        
+        .report-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
         }
-    
-        .sort-arrow {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-        }
-    
-        th:nth-child(5):hover {
-            background-color: rgba(109, 91, 151, 0.1);
-        }
-
+        
         .report-button {
             flex: 1;
-            background-color: #6d5b97;
+            min-width: 200px;
+            background-color: var(--primary);
             color: white;
             padding: 12px 25px;
             border: none;
@@ -230,24 +219,18 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            min-width: 200px;
         }
-
+        
         .report-button:hover {
-            background-color: #7d6ba7;
+            background-color: var(--primary-light);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-
-        td:nth-child(6) {
+        
+        .price-column {
+            text-align: right;
             font-weight: 500;
-            color: #2ecc71; /* Зелёный цвет для цен */
-            text-align: right;
-            padding-right: 20px;
-        }
-
-        th:nth-child(6) {
-            text-align: right;
+            color: var(--success);
             padding-right: 20px;
         }
         
@@ -258,6 +241,10 @@
             
             .form-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .report-buttons {
+                flex-direction: column;
             }
             
             th, td {
@@ -351,7 +338,7 @@
                         <td>{{ order[2] }}</td>
                         <td>{{ order[3] }}</td>
                         <td>{{ order[4].strftime('%Y-%m-%d %H:%M') }}</td>
-                        <td>{{ "%.2f ₽" % order[5] }}</td>  <!-- Форматированная цена -->
+                        <td {{ "%.2f ₽" % (order[5] or 0) }}</td>
                         <td class="action-buttons">
                             <button class="delete" onclick="window.location.href='/delete/{{ order[0] }}'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
@@ -370,7 +357,8 @@
             </div>
             {% endif %}
         </div>
-        <div style="display: flex; gap: 15px; margin-top: 30px;">
+
+        <div class="report-buttons">
             <button id="generateReport" class="report-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
                     <path d="M3 3v18h18"></path>
@@ -389,33 +377,31 @@
                 Отчёт по выручке
             </button>
         </div>
-        <div style="margin-top: 30px;">
-            <div id="reportContainer" style="margin-top: 30px; display: none;">
-                <h2>Отчёт по заказам</h2>
-                <div id="plotContainer" style="text-align: center;">
-                    <img id="plotImage" style="max-width: 100%; height: auto;">
-                </div>
+        
+        <div id="reportContainer" style="margin-top: 30px; display: none;">
+            <h2>Отчёт по заказам</h2>
+            <div id="plotContainer" style="text-align: center;">
+                <img id="plotImage" style="max-width: 100%; height: auto;">
             </div>
         </div>
-        <div style="margin-top: 30px;">            
-            <div id="revenueReportContainer" style="margin-top: 30px; display: none;">
-                <h2>Выручка за последние 7 дней</h2>
-                <div id="revenuePlotContainer" style="text-align: center;">
-                    <img id="revenuePlotImage" style="max-width: 100%; height: auto;">
-                </div>
-                <div id="revenueDataTable" style="margin-top: 20px;">
-                    <table style="width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Выручка (₽)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="revenueDataBody">
-                            <!-- Данные будут добавлены через JS -->
-                        </tbody>
-                    </table>
-                </div>
+        
+        <div id="revenueReportContainer" style="margin-top: 30px; display: none;">
+            <h2>Выручка за последние 7 дней</h2>
+            <div id="revenuePlotContainer" style="text-align: center;">
+                <img id="revenuePlotImage" style="max-width: 100%; height: auto;">
+            </div>
+            <div id="revenueDataTable" style="margin-top: 20px;">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Выручка (₽)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="revenueDataBody">
+                        <!-- Данные будут добавлены через JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -431,7 +417,7 @@
                     field.style.borderColor = 'var(--danger)';
                     isValid = false;
                 } else {
-                    field.style.borderColor = 'var(--border)';
+                    field.style.borderColor = '';
                 }
             });
             
@@ -448,21 +434,11 @@
             this.value = !x[2] ? x[1] : x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
         });
 
-        // Reset field styles on input
-        document.querySelectorAll('input, select').forEach(field => {
-            field.addEventListener('input', function() {
-                if (this.style.borderColor === 'var(--danger)') {
-                    this.style.borderColor = 'var(--border)';
-                }
-            });
-        });
-    </script>
-    <script>
+        // Generate master report
         document.getElementById('generateReport').addEventListener('click', function() {
             const reportBtn = this;
             const originalText = reportBtn.innerHTML;
             
-            // Показываем загрузку
             reportBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>Генерация отчёта...';
             reportBtn.disabled = true;
             
@@ -473,7 +449,6 @@
                         document.getElementById('plotImage').src = 'data:image/png;base64,' + data.plot_url;
                         document.getElementById('reportContainer').style.display = 'block';
                         
-                        // Прокручиваем к отчёту
                         document.getElementById('reportContainer').scrollIntoView({
                             behavior: 'smooth'
                         });
@@ -489,57 +464,8 @@
                     reportBtn.disabled = false;
                 });
         });
-        
-        // Добавляем анимацию вращения для иконки загрузки
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-            .spin {
-                animation: spin 1s linear infinite;
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateHeader = document.querySelector('th:nth-child(5)'); // Заголовок столбца с датой
-            let sortDirection = 'desc'; // Начальное направление сортировки
-            
-            // Добавляем стрелочку к заголовку даты
-            dateHeader.innerHTML = `Дата <span class="sort-arrow">↓</span>`;
-            
-            dateHeader.addEventListener('click', function() {
-                const table = document.querySelector('table');
-                const tbody = table.querySelector('tbody');
-                const rows = Array.from(tbody.querySelectorAll('tr'));
-                
-                // Меняем направление сортировки
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-                
-                // Обновляем стрелочку
-                const arrow = dateHeader.querySelector('.sort-arrow');
-                arrow.textContent = sortDirection === 'asc' ? '↑' : '↓';
-                
-                // Сортируем строки
-                rows.sort((a, b) => {
-                    const dateA = new Date(a.cells[4].textContent);
-                    const dateB = new Date(b.cells[4].textContent);
-                    
-                    return sortDirection === 'asc' 
-                        ? dateA - dateB 
-                        : dateB - dateA;
-                });
-                
-                // Очищаем и перезаполняем tbody
-                tbody.innerHTML = '';
-                rows.forEach(row => tbody.appendChild(row));
-            });
-        });
-    </script>
-    <script>
+
+        // Generate revenue report
         document.getElementById('generateRevenueReport').addEventListener('click', function() {
             const btn = this;
             const originalText = btn.innerHTML;
@@ -551,11 +477,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        // Показываем график
                         document.getElementById('revenuePlotImage').src = 'data:image/png;base64,' + data.plot_url;
                         document.getElementById('revenueReportContainer').style.display = 'block';
                         
-                        // Заполняем таблицу с данными
                         const tbody = document.getElementById('revenueDataBody');
                         tbody.innerHTML = '';
                         
@@ -568,7 +492,6 @@
                             tbody.appendChild(row);
                         });
                         
-                        // Прокручиваем к отчёту
                         document.getElementById('revenueReportContainer').scrollIntoView({
                             behavior: 'smooth'
                         });
@@ -584,6 +507,19 @@
                     btn.disabled = false;
                 });
         });
+
+        // Add spinning animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
