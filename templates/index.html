@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Парикмахерская - Управление заказами</title>
+    <title>Barbershop</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,13 +17,13 @@
             --text-light: #7f8c8d;
             --border: #dfe6e9;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             font-family: 'Roboto', sans-serif;
             line-height: 1.6;
@@ -31,7 +31,7 @@
             background-color: #f5f7fa;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -40,24 +40,24 @@
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
-        
+
         h1, h2 {
             color: var(--primary);
             margin-bottom: 20px;
             font-weight: 500;
         }
-        
+
         h1 {
             font-size: 28px;
             border-bottom: 2px solid var(--primary-light);
             padding-bottom: 10px;
         }
-        
+
         h2 {
             font-size: 22px;
             margin-top: 30px;
         }
-        
+
         .form-card {
             background: white;
             border-radius: 8px;
@@ -65,29 +65,29 @@
             margin-bottom: 30px;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
         }
-        
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--text);
         }
-        
+
         label.required:after {
             content: " *";
             color: var(--danger);
         }
-        
+
         input, select {
             width: 100%;
             padding: 12px 15px;
@@ -96,13 +96,13 @@
             font-size: 16px;
             transition: all 0.3s;
         }
-        
+
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary-light);
             box-shadow: 0 0 0 3px rgba(109, 91, 151, 0.1);
         }
-        
+
         button {
             background-color: var(--primary);
             color: white;
@@ -117,98 +117,109 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         button:hover {
             background-color: var(--primary-light);
             transform: translateY(-2px);
         }
-        
+
         button.delete {
             background-color: var(--danger);
         }
-        
+
         button.delete:hover {
             background-color: #c0392b;
         }
-        
+
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         th, td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
-        
+
         th {
             background-color: var(--primary);
             color: white;
             font-weight: 500;
         }
-        
+
         tr:nth-child(even) {
             background-color: var(--secondary);
         }
-        
+
         tr:hover {
             background-color: rgba(109, 91, 151, 0.05);
         }
-        
+
         .alert {
             padding: 15px;
             margin: 20px 0;
             border-radius: 6px;
             font-weight: 500;
         }
-        
+
         .alert-success {
             background-color: rgba(46, 204, 113, 0.1);
             color: var(--success);
             border-left: 4px solid var(--success);
         }
-        
+
         .alert-error {
             background-color: rgba(231, 76, 60, 0.1);
             color: var(--danger);
             border-left: 4px solid var(--danger);
         }
-        
+
         .alert-info {
             background-color: rgba(52, 152, 219, 0.1);
             color: var(--info);
             border-left: 4px solid var(--info);
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 10px;
         }
-        
+
         .empty-state {
             text-align: center;
             padding: 40px;
             color: var(--text-light);
         }
-        
-        .report-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
+
+        th:nth-child(5) {
+            cursor: pointer;
+            position: relative;
+            padding-right: 25px;
         }
-        
+
+        .sort-arrow {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+        }
+
+        th:nth-child(5):hover {
+            background-color: rgba(109, 91, 151, 0.1);
+        }
+
         .report-button {
             flex: 1;
-            min-width: 200px;
-            background-color: var(--primary);
+            background-color: #6d5b97;
             color: white;
             padding: 12px 25px;
             border: none;
@@ -219,34 +230,36 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
+            min-width: 200px;
         }
-        
+
         .report-button:hover {
-            background-color: var(--primary-light);
+            background-color: #7d6ba7;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        
-        .price-column {
-            text-align: right;
+
+        td:nth-child(6) {
             font-weight: 500;
-            color: var(--success);
+            color: #2ecc71; /* Зелёный цвет для цен */
+            text-align: right;
             padding-right: 20px;
         }
-        
+
+        th:nth-child(6) {
+            text-align: right;
+            padding-right: 20px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
-            
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .report-buttons {
-                flex-direction: column;
-            }
-            
+
             th, td {
                 padding: 10px;
             }
@@ -254,137 +267,137 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Парикмахерская</h1>
-        
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-        
-        <div class="form-card">
-            <h2>Новый заказ</h2>
-            <form action="/add" method="post" onsubmit="return validateForm()">
-                <div class="form-grid">
-                    <div>
-                        <div class="form-group">
-                            <label for="first_name" class="required">Имя клиента</label>
-                            <input type="text" name="first_name" id="first_name" required placeholder="Введите имя">
-                        </div>
-                        <div class="form-group">
-                            <label for="last_name" class="required">Фамилия клиента</label>
-                            <input type="text" name="last_name" id="last_name" required placeholder="Введите фамилию">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone" class="required">Телефон</label>
-                            <input type="tel" name="phone" id="phone" required placeholder="+7 (999) 123-45-67">
-                        </div>
-                    </div>
-                    <div>
-                        <div class="form-group">
-                            <label for="haircut_id" class="required">Стрижка</label>
-                            <select name="haircut_id" id="haircut_id" required>
-                                <option value="">-- Выберите стрижку --</option>
-                                {% for haircut in haircuts %}
-                                <option value="{{ haircut[0] }}">{{ haircut[1] }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="barber_id" class="required">Мастер</label>
-                            <select name="barber_id" id="barber_id" required>
-                                <option value="">-- Выберите мастера --</option>
-                                {% for barber in barbers %}
-                                <option value="{{ barber[0] }}">{{ barber[1] }} {{ barber[2] }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                        <path d="M12 5v14M5 12h14"></path>
-                    </svg>
-                    Добавить заказ
-                </button>
-            </form>
-        </div>
-        
-        <h2>История заказов</h2>
-        <div class="table-container">
-            {% if orders %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Стрижка</th>
-                        <th>Клиент</th>
-                        <th>Мастер</th>
-                        <th>Дата</th>
-                        <th>Стоимость</th> 
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <td>{{ order[0] }}</td>
-                        <td>{{ order[1] }}</td>
-                        <td>{{ order[2] }}</td>
-                        <td>{{ order[3] }}</td>
-                        <td>{{ order[4].strftime('%Y-%m-%d %H:%M') }}</td>
-                        <td {{ "%.2f ₽" % (order[5] or 0) }}</td>
-                        <td class="action-buttons">
-                            <button class="delete" onclick="window.location.href='/delete/{{ order[0] }}'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
-                                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                </svg>
-                                Удалить
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div class="empty-state">
-                <p>Нет данных о заказах. Добавьте первый заказ.</p>
-            </div>
-            {% endif %}
-        </div>
+<div class="container">
+    <h1>Парикмахерская</h1>
 
-        <div class="report-buttons">
-            <button id="generateReport" class="report-button">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="form-card">
+        <h2>Новый заказ</h2>
+        <form action="/add" method="post" onsubmit="return validateForm()">
+            <div class="form-grid">
+                <div>
+                    <div class="form-group">
+                        <label for="first_name" class="required">Имя клиента</label>
+                        <input type="text" name="first_name" id="first_name" required placeholder="Введите имя">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="required">Фамилия клиента</label>
+                        <input type="text" name="last_name" id="last_name" required placeholder="Введите фамилию">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="required">Телефон</label>
+                        <input type="tel" name="phone" id="phone" required placeholder="+7 (999) 123-45-67">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="haircut_id" class="required">Стрижка</label>
+                        <select name="haircut_id" id="haircut_id" required>
+                            <option value="">-- Выберите стрижку --</option>
+                            {% for haircut in haircuts %}
+                            <option value="{{ haircut[0] }}">{{ haircut[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="barber_id" class="required">Мастер</label>
+                        <select name="barber_id" id="barber_id" required>
+                            <option value="">-- Выберите мастера --</option>
+                            {% for barber in barbers %}
+                            <option value="{{ barber[0] }}">{{ barber[1] }} {{ barber[2] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                    <path d="M3 3v18h18"></path>
-                    <rect x="7" y="4" width="7" height="8"></rect>
-                    <rect x="14" y="12" width="7" height="6"></rect>
+                    <path d="M12 5v14M5 12h14"></path>
                 </svg>
-                Отчёт по мастерам
+                Добавить заказ
             </button>
-            
-            <button id="generateRevenueReport" class="report-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                    <line x1="12" y1="20" x2="12" y2="10"></line>
-                    <line x1="18" y1="20" x2="18" y2="4"></line>
-                    <line x1="6" y1="20" x2="6" y2="16"></line>
-                </svg>
-                Отчёт по выручке
-            </button>
+        </form>
+    </div>
+
+    <h2>История заказов</h2>
+    <div class="table-container">
+        {% if orders %}
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Стрижка</th>
+                <th>Клиент</th>
+                <th>Мастер</th>
+                <th>Дата</th>
+                <th>Стоимость</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order[0] }}</td>
+                <td>{{ order[1] }}</td>
+                <td>{{ order[2] }}</td>
+                <td>{{ order[3] }}</td>
+                <td>{{ order[4].strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ "%.2f ₽" % order[5] }}</td>  <!-- Форматированная цена -->
+                <td class="action-buttons">
+                    <button class="delete" onclick="window.location.href='/delete/{{ order[0] }}'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Удалить
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>Нет данных о заказах. Добавьте первый заказ.</p>
         </div>
-        
+        {% endif %}
+    </div>
+    <div style="display: flex; gap: 15px; margin-top: 30px;">
+        <button id="generateReport" class="report-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <path d="M3 3v18h18"></path>
+                <rect x="7" y="4" width="7" height="8"></rect>
+                <rect x="14" y="12" width="7" height="6"></rect>
+            </svg>
+            Отчёт по мастерам
+        </button>
+
+        <button id="generateRevenueReport" class="report-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                <line x1="12" y1="20" x2="12" y2="10"></line>
+                <line x1="18" y1="20" x2="18" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="16"></line>
+            </svg>
+            Отчёт по выручке
+        </button>
+    </div>
+    <div style="margin-top: 30px;">
         <div id="reportContainer" style="margin-top: 30px; display: none;">
             <h2>Отчёт по заказам</h2>
             <div id="plotContainer" style="text-align: center;">
                 <img id="plotImage" style="max-width: 100%; height: auto;">
             </div>
         </div>
-        
+    </div>
+    <div style="margin-top: 30px;">
         <div id="revenueReportContainer" style="margin-top: 30px; display: none;">
             <h2>Выручка за последние 7 дней</h2>
             <div id="revenuePlotContainer" style="text-align: center;">
@@ -393,124 +406,93 @@
             <div id="revenueDataTable" style="margin-top: 20px;">
                 <table style="width: 100%;">
                     <thead>
-                        <tr>
-                            <th>Дата</th>
-                            <th>Выручка (₽)</th>
-                        </tr>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Выручка (₽)</th>
+                    </tr>
                     </thead>
                     <tbody id="revenueDataBody">
-                        <!-- Данные будут добавлены через JS -->
+                    <!-- Данные будут добавлены через JS -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Client-side validation
-        function validateForm() {
-            let isValid = true;
-            const requiredFields = document.querySelectorAll('[required]');
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.style.borderColor = 'var(--danger)';
-                    isValid = false;
-                } else {
-                    field.style.borderColor = '';
-                }
-            });
-            
-            if (!isValid) {
-                alert('Пожалуйста, заполните все обязательные поля!');
-                return false;
+<script>
+    // Client-side validation
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = document.querySelectorAll('[required]');
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = 'var(--danger)';
+                isValid = false;
+            } else {
+                field.style.borderColor = 'var(--border)';
             }
-            return true;
+        });
+
+        if (!isValid) {
+            alert('Пожалуйста, заполните все обязательные поля!');
+            return false;
         }
+        return true;
+    }
 
-        // Phone number formatting
-        document.getElementById('phone').addEventListener('input', function(e) {
-            let x = this.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
-            this.value = !x[2] ? x[1] : x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+    // Phone number formatting
+    document.getElementById('phone').addEventListener('input', function(e) {
+        let x = this.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        this.value = !x[2] ? x[1] : x[1] + ' (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+    });
+
+    // Reset field styles on input
+    document.querySelectorAll('input, select').forEach(field => {
+        field.addEventListener('input', function() {
+            if (this.style.borderColor === 'var(--danger)') {
+                this.style.borderColor = 'var(--border)';
+            }
         });
+    });
+</script>
+<script>
+    document.getElementById('generateReport').addEventListener('click', function() {
+        const reportBtn = this;
+        const originalText = reportBtn.innerHTML;
 
-        // Generate master report
-        document.getElementById('generateReport').addEventListener('click', function() {
-            const reportBtn = this;
-            const originalText = reportBtn.innerHTML;
-            
-            reportBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>Генерация отчёта...';
-            reportBtn.disabled = true;
-            
-            fetch('/get_report_data')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('plotImage').src = 'data:image/png;base64,' + data.plot_url;
-                        document.getElementById('reportContainer').style.display = 'block';
-                        
-                        document.getElementById('reportContainer').scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    } else {
-                        alert('Ошибка при генерации отчёта: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    alert('Ошибка при загрузке данных: ' + error);
-                })
-                .finally(() => {
-                    reportBtn.innerHTML = originalText;
-                    reportBtn.disabled = false;
-                });
-        });
+        // Показываем загрузку
+        reportBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>Генерация отчёта...';
+        reportBtn.disabled = true;
 
-        // Generate revenue report
-        document.getElementById('generateRevenueReport').addEventListener('click', function() {
-            const btn = this;
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>Загрузка...';
-            btn.disabled = true;
-            
-            fetch('/get_revenue_report')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('revenuePlotImage').src = 'data:image/png;base64,' + data.plot_url;
-                        document.getElementById('revenueReportContainer').style.display = 'block';
-                        
-                        const tbody = document.getElementById('revenueDataBody');
-                        tbody.innerHTML = '';
-                        
-                        data.data.forEach(item => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${item.date}</td>
-                                <td>${item.revenue.toFixed(2)} ₽</td>
-                            `;
-                            tbody.appendChild(row);
-                        });
-                        
-                        document.getElementById('revenueReportContainer').scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    } else {
-                        alert('Ошибка: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    alert('Ошибка загрузки: ' + error);
-                })
-                .finally(() => {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                });
-        });
+        fetch('/get_report_data')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('plotImage').src = 'data:image/png;base64,' + data.plot_url;
+                    document.getElementById('reportContainer').style.display = 'block';
 
-        // Add spinning animation
-        const style = document.createElement('style');
-        style.innerHTML = `
+                    // Прокручиваем к отчёту
+                    document.getElementById('reportContainer').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                } else {
+                    alert('Ошибка при генерации отчёта: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Ошибка при загрузке данных: ' + error);
+            })
+            .finally(() => {
+                reportBtn.innerHTML = originalText;
+                reportBtn.disabled = false;
+            });
+    });
+
+    // Добавляем анимацию вращения для иконки загрузки
+    const style = document.createElement('style');
+    style.innerHTML = `
             @keyframes spin {
                 from { transform: rotate(0deg); }
                 to { transform: rotate(360deg); }
@@ -519,7 +501,89 @@
                 animation: spin 1s linear infinite;
             }
         `;
-        document.head.appendChild(style);
-    </script>
+    document.head.appendChild(style);
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateHeader = document.querySelector('th:nth-child(5)'); // Заголовок столбца с датой
+        let sortDirection = 'desc'; // Начальное направление сортировки
+
+        // Добавляем стрелочку к заголовку даты
+        dateHeader.innerHTML = `Дата <span class="sort-arrow">↓</span>`;
+
+        dateHeader.addEventListener('click', function() {
+            const table = document.querySelector('table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Меняем направление сортировки
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+            // Обновляем стрелочку
+            const arrow = dateHeader.querySelector('.sort-arrow');
+            arrow.textContent = sortDirection === 'asc' ? '↑' : '↓';
+
+            // Сортируем строки
+            rows.sort((a, b) => {
+                const dateA = new Date(a.cells[4].textContent);
+                const dateB = new Date(b.cells[4].textContent);
+
+                return sortDirection === 'asc'
+                    ? dateA - dateB
+                    : dateB - dateA;
+            });
+
+            // Очищаем и перезаполняем tbody
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        });
+    });
+</script>
+<script>
+    document.getElementById('generateRevenueReport').addEventListener('click', function() {
+        const btn = this;
+        const originalText = btn.innerHTML;
+
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>Загрузка...';
+        btn.disabled = true;
+
+        fetch('/get_revenue_report')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Показываем график
+                    document.getElementById('revenuePlotImage').src = 'data:image/png;base64,' + data.plot_url;
+                    document.getElementById('revenueReportContainer').style.display = 'block';
+
+                    // Заполняем таблицу с данными
+                    const tbody = document.getElementById('revenueDataBody');
+                    tbody.innerHTML = '';
+
+                    data.data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                <td>${item.date}</td>
+                                <td>${item.revenue.toFixed(2)} ₽</td>
+                            `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Прокручиваем к отчёту
+                    document.getElementById('revenueReportContainer').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                } else {
+                    alert('Ошибка: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Ошибка загрузки: ' + error);
+            })
+            .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+    });
+</script>
 </body>
 </html>
