@@ -184,5 +184,64 @@ def get_report_data():
         cur.close()
         conn.close()
 
+@app.route('/get_revenue_report')
+def get_revenue_report():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    try:
+        cur.execute("""
+            SELECT 
+                DATE(o.order_date) as order_day,
+                SUM(h.price * (1 - c.discount/100)) as daily_revenue
+            FROM orders o
+            JOIN haircuts h ON o.haircut_id = h.haircut_id
+            JOIN clients c ON o.client_id = c.client_id
+            WHERE o.order_date >= CURRENT_DATE - INTERVAL '7 days'
+            GROUP BY DATE(o.order_date)
+            ORDER BY order_day ASC
+        """)
+        report_data = cur.fetchall()
+        
+        dates = [row[0].strftime('%d.%m') for row in report_data]  # Форматируем даты
+        revenues = [float(row[1]) for row in report_data]
+        
+        # Создаем гистограмму
+        plt.figure(figsize=(10, 6))
+        bars = plt.bar(dates, revenues, color='#6d5b97')
+        
+        # Добавляем значения на столбцы
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{height:.2f} ₽',
+                    ha='center', va='bottom')
+        
+        plt.title('Выручка за последние 7 дней')
+        plt.xlabel('Дата')
+        plt.ylabel('Сумма выручки (₽)')
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        
+        # Сохраняем график в буфер
+        img = io.BytesIO()
+        plt.savefig(img, format='png', dpi=100)
+        img.seek(0)
+        plt.close()
+        
+        return jsonify({
+            'status': 'success',
+            'plot_url': base64.b64encode(img.getvalue()).decode('utf8'),
+            'data': [{'date': d, 'revenue': r} for d, r in zip(dates, revenues)]
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        })
+    finally:
+        cur.close()
+        conn.close()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
