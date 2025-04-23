@@ -29,8 +29,10 @@ def index():
     # Get orders with related data
     cur.execute("""
         SELECT o.order_id, h.name as haircut_name, 
-               c.first_name || ' ' || c.last_name as client_name,
-               b.first_name || ' ' || b.last_name as barber_name, o.order_date
+               COALESCE(c.first_name || ' ' || c.last_name) as client_name,
+               b.first_name || ' ' || b.last_name as barber_name, 
+               o.order_date,
+               h.price * (1 - COALESCE(c.discount, 0)/100) as final_price
         FROM orders o
         JOIN haircuts h ON o.haircut_id = h.haircut_id
         JOIN clients c ON o.client_id = c.client_id

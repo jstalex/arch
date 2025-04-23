@@ -216,6 +216,40 @@
         th:nth-child(5):hover {
             background-color: rgba(109, 91, 151, 0.1);
         }
+
+        .report-button {
+            flex: 1;
+            background-color: #6d5b97;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+
+        .report-button:hover {
+            background-color: #7d6ba7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        td:nth-child(6) {
+            font-weight: 500;
+            color: #2ecc71; /* Зелёный цвет для цен */
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        th:nth-child(6) {
+            text-align: right;
+            padding-right: 20px;
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -305,6 +339,7 @@
                         <th>Клиент</th>
                         <th>Мастер</th>
                         <th>Дата</th>
+                        <th>Стоимость</th> 
                         <th>Действия</th>
                     </tr>
                 </thead>
@@ -316,6 +351,7 @@
                         <td>{{ order[2] }}</td>
                         <td>{{ order[3] }}</td>
                         <td>{{ order[4].strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ "%.2f ₽" % order[5] }}</td>  <!-- Форматированная цена -->
                         <td class="action-buttons">
                             <button class="delete" onclick="window.location.href='/delete/{{ order[0] }}'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
@@ -334,25 +370,17 @@
             </div>
             {% endif %}
         </div>
-        <div style="margin-top: 30px;">
-            <button id="generateReport" style="background-color: #6d5b97; color: white; padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;">
+        <div style="display: flex; gap: 15px; margin-top: 30px;">
+            <button id="generateReport" class="report-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
                     <path d="M3 3v18h18"></path>
                     <rect x="7" y="4" width="7" height="8"></rect>
                     <rect x="14" y="12" width="7" height="6"></rect>
                 </svg>
-                Отчет по мастерам
+                Отчёт по мастерам
             </button>
             
-            <div id="reportContainer" style="margin-top: 30px; display: none;">
-                <h2>Отчёт по заказам</h2>
-                <div id="plotContainer" style="text-align: center;">
-                    <img id="plotImage" style="max-width: 100%; height: auto;">
-                </div>
-            </div>
-        </div>
-        <div style="margin-top: 30px;">
-            <button id="generateRevenueReport" style="background-color: #4CAF50; color: white; padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-right: 15px;">
+            <button id="generateRevenueReport" class="report-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
                     <line x1="12" y1="20" x2="12" y2="10"></line>
                     <line x1="18" y1="20" x2="18" y2="4"></line>
@@ -360,7 +388,16 @@
                 </svg>
                 Отчёт по выручке
             </button>
-            
+        </div>
+        <div style="margin-top: 30px;">
+            <div id="reportContainer" style="margin-top: 30px; display: none;">
+                <h2>Отчёт по заказам</h2>
+                <div id="plotContainer" style="text-align: center;">
+                    <img id="plotImage" style="max-width: 100%; height: auto;">
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 30px;">            
             <div id="revenueReportContainer" style="margin-top: 30px; display: none;">
                 <h2>Выручка за последние 7 дней</h2>
                 <div id="revenuePlotContainer" style="text-align: center;">
