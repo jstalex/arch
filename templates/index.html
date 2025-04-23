@@ -198,6 +198,24 @@
             padding: 40px;
             color: var(--text-light);
         }
+
+        th:nth-child(5) {
+            cursor: pointer;
+            position: relative;
+            padding-right: 25px;
+        }
+    
+        .sort-arrow {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+        }
+    
+        th:nth-child(5):hover {
+            background-color: rgba(109, 91, 151, 0.1);
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -297,7 +315,7 @@
                         <td>{{ order[1] }}</td>
                         <td>{{ order[2] }}</td>
                         <td>{{ order[3] }}</td>
-                        <td>{{ order[4].strftime('%d.%m.%Y %H:%M') }}</td>
+                        <td>{{ order[4].strftime('%Y-%m-%d %H:%M') }}</td>
                         <td class="action-buttons">
                             <button class="delete" onclick="window.location.href='/delete/{{ order[0] }}'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
@@ -417,6 +435,42 @@
             }
         `;
         document.head.appendChild(style);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateHeader = document.querySelector('th:nth-child(5)'); // Заголовок столбца с датой
+            let sortDirection = 'desc'; // Начальное направление сортировки
+            
+            // Добавляем стрелочку к заголовку даты
+            dateHeader.innerHTML = `Дата <span class="sort-arrow">↓</span>`;
+            
+            dateHeader.addEventListener('click', function() {
+                const table = document.querySelector('table');
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                
+                // Меняем направление сортировки
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                
+                // Обновляем стрелочку
+                const arrow = dateHeader.querySelector('.sort-arrow');
+                arrow.textContent = sortDirection === 'asc' ? '↑' : '↓';
+                
+                // Сортируем строки
+                rows.sort((a, b) => {
+                    const dateA = new Date(a.cells[4].textContent);
+                    const dateB = new Date(b.cells[4].textContent);
+                    
+                    return sortDirection === 'asc' 
+                        ? dateA - dateB 
+                        : dateB - dateA;
+                });
+                
+                // Очищаем и перезаполняем tbody
+                tbody.innerHTML = '';
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
     </script>
 </body>
 </html>
